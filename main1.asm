@@ -13,26 +13,26 @@ start:
 	call printstr
 	call new_line
 	
-	mov ah, 4Ch			; terminate
-	mov al, 0			; return code
+	mov ah, 4Ch		; terminate
+	mov al, 0		; return code
 	int 21h
 
 printchar:
-	push dx				; fonksiyon başında ve sonunda değişmeden kullanalım diye
-	push ax				; stack'e yolluyoruz ve fonksiyon içinde değiştirebiliyoruz
-		mov ah, 02h		; output char servisi
-		mov dl, al		; al'deki karakteri yaz
-		int 21h			; dos interrupt
-	pop ax				; stack'e yollama sıramıza göre geri çekmemiz önemli
-	pop dx				; yoksa değerler karışır
+	push dx			; fonksiyon başında ve sonunda değişmeden kullanalım diye
+	push ax			; stack'e yolluyoruz ve fonksiyon içinde değiştirebiliyoruz
+		mov ah, 02h	; output char servisi
+		mov dl, al	; al'deki karakteri yaz
+		int 21h		; dos interrupt
+	pop ax			; stack'e yollama sıramıza göre geri çekmemiz önemli
+	pop dx			; yoksa değerler karışır
 	ret
 printstr:
 	mov al, ds:[si]		; data segmentten, atadığımız si'yi yani msg'nin adresindeki ilk karakteri yüklüyoruz
-						; masm ile [ds:si], tasm ile ds:[si]
-	cmp al, 255			; "sona geldik mi?" kontrolü (yazdığın str'nin sonuna o sayıyı koyman lazım)
+				; masm ile [ds:si], tasm ile ds:[si]
+	cmp al, 255		; "sona geldik mi?" kontrolü (yazdığın str'nin sonuna o sayıyı koyman lazım)
 	jz print_done		; başka karakter yoksa geri dön
 	call printchar		; karakteri yazdır
-	inc si				; sonraki karakter
+	inc si			; sonraki karakter
 	jmp printstr		; tekrar et bitene kadar
 print_done:
 	ret
